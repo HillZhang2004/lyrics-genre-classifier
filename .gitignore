@@ -1,5 +1,6 @@
-# data
-data/
+# data (do not commit dataset)
+data/*
+!data/.gitkeep
 *.csv
 
 # python / notebooks
