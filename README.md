@@ -1,4 +1,4 @@
-# CS145 Lyrics Genre Classifier
+# Lyrics Genre Classifier
 
 This project predicts a song’s genre using **lyrics text only** (no audio).  
 Given lyrics, the model predicts one of five genres: **Folk, Jazz, Metal, Pop, Rock**.
