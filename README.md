@@ -11,9 +11,9 @@ Slides (project overview + results):
 https://docs.google.com/presentation/d/10pTTQb_L21_sDHcCswdqTa61122DklkoD4eUYz3HnkM/edit?usp=sharing
 
 Key visuals (in this repo):
-- PCA of MiniLM embeddings: `assets/figures/pca_minilm_embeddings.png`
-- Normalized confusion matrix (TF-IDF + LR): `assets/figures/confusion_matrix_tfidf_lr.png`
-- Top TF-IDF words (example: Folk): `assets/figures/top_tfidf_words_folk.png`
+- PCA of MiniLM embeddings: [`assets/figures/pca_minilm_embeddings.png`](assets/figures/pca_minilm_embeddings.png)
+- Normalized confusion matrix (TF-IDF + LR): [`assets/figures/confusion_matrix_tfidf_lr.png`](assets/figures/confusion_matrix_tfidf_lr.png)
+- Top TF-IDF words (example: Folk): [`assets/figures/top_tfidf_words_folk.png`](assets/figures/top_tfidf_words_folk.png)
 
 ## Results (held-out test set)
 
