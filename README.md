@@ -1,53 +1,76 @@
 # Lyrics Genre Classifier
 
-This project predicts a song’s genre using **lyrics text only** (no audio).  
-Given lyrics, the model predicts one of five genres: **Folk, Jazz, Metal, Pop, Rock**.
+Predicts a song’s genre from **lyrics text only** (no audio).  
+Labels: **Folk, Jazz, Metal, Pop, Rock**.
 
-I use this setup to test how much genre signal exists in lyrics alone, and to compare a strong TF-IDF baseline against “modern” text features (MiniLM embeddings, with and without an autoencoder).
+**TL;DR takeaway:** A strong classic baseline (TF-IDF) matches or beats “modern” embeddings on this task, and most errors collapse into **Rock** (the model’s “magnet” class).
 
-## Dataset
+## Quick links (for recruiters)
 
-I use the Kaggle dataset **“Multi-Lingual Lyrics for Genre Classification”** by Matei Bejan:  
+Slides (project overview + results):
+https://docs.google.com/presentation/d/10pTTQb_L21_sDHcCswdqTa61122DklkoD4eUYz3HnkM/edit?usp=sharing
+
+Key visuals (in this repo):
+- PCA of MiniLM embeddings: `assets/figures/pca_minilm_embeddings.png`
+- Normalized confusion matrix (TF-IDF + LR): `assets/figures/confusion_matrix_tfidf_lr.png`
+- Top TF-IDF words (example: Folk): `assets/figures/top_tfidf_words_folk.png`
+
+## Results (held-out test set)
+
+I keep the classifier fixed (**multiclass logistic regression**) and only change the feature representation.
+
+| Features | Test accuracy | Test macro-F1 |
+|---|---:|---:|
+| TF-IDF (20k vocab) | 0.6096 | 0.4732 |
+| MiniLM embeddings (384d) | 0.6090 | 0.4426 |
+| MiniLM + Autoencoder (64d latent) | 0.5939 | 0.3938 |
+
+**Interpretation:** Accuracy is similar for TF-IDF and MiniLM, but TF-IDF wins on macro-F1. The autoencoder compression loses signal for this label set.
+
+## Data and split
+
+Dataset: Kaggle “Multi-Lingual Lyrics for Genre Classification” (Matei Bejan)  
 https://www.kaggle.com/datasets/mateibejan/multilingual-lyrics-for-genre-classification
 
-Important: after downloading, I only use the **train.csv** file (the large file).  
-In my local setup, I rename it to:
-
-- `lyrics_train.csv`
-
-and place it here:
-
+In my runs, I use `train.csv` only and rename it to:
 - `data/lyrics_train.csv`
 
-The raw dataset is not included in this GitHub repo because it is large (hundreds of MB) and GitHub does not support pushing files that big by default.
+Split (stratified):
+- Train: 30k
+- Validation: 10k (tune regularization C using macro-F1)
+- Test: 10k (final report)
+
+## What I compared
+
+All models use logistic regression; only the representation changes:
+1. TF-IDF (bag of words, capped at ~20k features)
+2. MiniLM sentence embeddings (384-d)
+3. MiniLM embeddings compressed with an autoencoder (64-d latent)
 
 ## Repo structure
 
 - `notebooks/lyrics_genre_project.ipynb`  
-  Main notebook with preprocessing, feature extraction, training, and evaluation.
+  End-to-end pipeline: preprocessing → features → training → evaluation → plots.
+
+- `assets/figures/`  
+  Saved figures used in the README / slides.
 
 - `data/`  
-  Not tracked in git. This is where you should put `lyrics_train.csv`.
+  Local-only (not tracked). Put `lyrics_train.csv` here.
 
 ## How to run
 
-1. Download the dataset from Kaggle (link above).
-2. Put the file in `data/lyrics_train.csv`.
-3. Open and run:
+1. Download the dataset from Kaggle.
+2. Put `train.csv` into `data/` and rename to `lyrics_train.csv`.
+3. Run the notebook:
    - `notebooks/lyrics_genre_project.ipynb`
 
-Typical dependencies include: pandas, numpy, scikit-learn, matplotlib, sentence-transformers, torch.
+Typical dependencies:
+- pandas, numpy, scikit-learn, matplotlib
+- sentence-transformers, torch
 
-## What I compared
+## Notes / what I learned
 
-All comparisons use logistic regression as the classifier, and only the feature representation changes:
-
-1. TF-IDF features (bag of words)
-2. MiniLM embeddings (384 dim)
-3. MiniLM embeddings compressed with an autoencoder (64 dim latent)
-
-I tune regularization on the validation set using macro-F1, then report final test accuracy and macro-F1 plus confusion matrices.
-
-## Notes
-
-Results depend on the exact random seed and split, but the main takeaway was consistent in my final run: TF-IDF is a very strong baseline for this task.
+- TF-IDF is a surprisingly strong baseline for lyric-only classification.
+- The confusion matrix shows Rock absorbs many mistakes, suggesting lyric style features overlap heavily across genres.
+- Embeddings are not automatically “better”; representation choice depends on the task and evaluation metric (macro-F1 mattered here).
