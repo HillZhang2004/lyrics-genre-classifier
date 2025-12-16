@@ -112,6 +112,7 @@ All models use logistic regression; only the representation changes:
 Optional: create an env and install deps (example):
 ```bash
 pip install -U pandas numpy scikit-learn matplotlib sentence-transformers torch
+```
 
 ## Notes / what I learned
 
