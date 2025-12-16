@@ -116,8 +116,8 @@ pip install -U pandas numpy scikit-learn matplotlib sentence-transformers torch
 
 ## Notes / what I learned
 
-TF-IDF is a surprisingly strong baseline for lyric-only classification.
+- TF-IDF is a surprisingly strong baseline for lyric-only classification.
+- Embeddings are not automatically “better”; representation choice depends on the task and evaluation metric (macro-F1 mattered here).
+- The largest errors concentrate into Rock, suggesting genre boundaries are fuzzy from lyrics alone, and class imbalance or label noise may play a role.
 
-Embeddings are not automatically “better”; representation choice depends on the task and evaluation metric (macro-F1 mattered here).
-
-The largest errors concentrate into Rock, suggesting genre boundaries are fuzzy from lyrics alone, and class imbalance or label noise may play a role.
+Reproducibility note: results can shift slightly with different random seeds / splits, but the overall ranking (TF-IDF ≥ MiniLM, autoencoder worst) was consistent in my runs.
